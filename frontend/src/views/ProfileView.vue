@@ -8,6 +8,14 @@
         <h2 class="text-xl font-semibold mb-4 text-white">Your Profile Details:</h2>
         <div class="grid grid-cols-2 gap-4">
           <div>
+            <p class="text-gray-400">First Name:</p>
+            <p class="text-white">{{ user.first_name }}</p>
+          </div>
+          <div>
+            <p class="text-gray-400">Last Name:</p>
+            <p class="text-white">{{ user.last_name }}</p>
+          </div>
+          <div>
             <p class="text-gray-400">Email:</p>
             <p class="text-white">{{ user.username }}</p>
           </div>

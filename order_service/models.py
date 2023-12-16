@@ -7,6 +7,8 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
     total_price = db.Column(db.Float, nullable=False)
+    first_name = db.Column(db.String(255), nullable=False)
+    last_name = db.Column(db.String(255), nullable=False)
     shipping_address = db.Column(db.String(255), nullable=False)
     bank_info = db.Column(db.String(255), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
@@ -16,7 +18,7 @@ class OrderDetail(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    size = db.Column(db.String(1), nullable=False)  # Assuming 'S', 'M', 'L', etc.
+    size = db.Column(db.String(1), nullable=False)
     photo_name = db.Column(db.String(255), nullable=False)
     photo_id = db.Column(db.Integer, nullable=False)
     subtotal = db.Column(db.Float, nullable=False)

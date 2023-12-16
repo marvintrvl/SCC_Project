@@ -37,9 +37,11 @@ def place_order():
     total_price = data.get('total_price')
     shipping_address = data.get('shipping_address')
     bank_info = data.get('bank_info')
+    first_name = data.get('first_name')
+    last_name = data.get('last_name')
 
     # Create a new Order
-    order = Order(user_id=user_id, total_price=total_price, shipping_address=shipping_address, bank_info=bank_info)
+    order = Order(user_id=user_id, total_price=total_price, shipping_address=shipping_address, bank_info=bank_info, first_name=first_name, last_name=last_name)
     db.session.add(order)
     db.session.commit()
 

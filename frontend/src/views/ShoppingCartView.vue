@@ -1,4 +1,7 @@
 <template>
+  <!-- Add this link to include FontAwesome in your HTML file -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
   <div class="bg-gray-900 text-white min-h-screen py-6 sm:py-8 lg:py-12">
     <div class="max-w-3xl mx-auto mt-8">
       <h1 class="text-3xl font-semibold mb-6">Your Shopping Cart</h1>
@@ -16,7 +19,6 @@
             <th class="p-2 border">Size</th>
             <th class="p-2 border">Quantity</th>
             <th class="p-2 border">Subtotal</th>
-            <th class="p-2 border">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -34,35 +36,41 @@
             <td class="p-2 border">
               <form :id="'update-form-' + item.id" @submit.prevent="updateCartQuantity(item)">
                 <input type="number" v-model="item.quantity" min="1">
-                <button type="submit">Update</button>
+                <br>
+                <button type="submit" class="bg-gray-900 hover:bg-gray-900 text-white font-bold py-2 px-4 mr-2">
+                  Update
+                </button>
+                <button @click="deleteItem(item.id)" class="text-red-500 hover:text-red-700">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
               </form>
             </td>
             <td class="p-2 border">${{ item.photo.price }}</td>
-            <td class="p-2 border">
-              <button @click="deleteItem(item.id)" class="text-red-500 hover:text-red-700">Delete</button>
-            </td>
           </tr>
         </tbody>
       </table>
 
       <p class="mt-4">Total: ${{ cartTotal }}</p>
       <br>
-      <router-link to="/checkout" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+
+      <!-- Disable the checkout button if the cart is empty -->
+      <router-link v-if="cartItems.length > 0" to="/checkout" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         Proceed to Checkout
       </router-link>
+      <p v-else class="mt-4 text-red-500">Your cart is empty. Add items to proceed to checkout.</p>
     </div>
     <br>
   </div>
   <footer class="py-4 bg-gray-800 flex flex-col justify-center items-center">
-      <div class="flex justify-center items-center mb-4">
-        <a class="hover:text-gray-300" href="https://www.instagram.com/marvin.trvl">Contact Us</a>
-        <span class="mx-2 text-gray-400">|</span>
-        <a class="hover:text-gray-300" href="https://www.instagram.com/marvin.trvl">Impressum</a>
-        <span class="mx-2 text-gray-400">|</span>
-        <a class="hover:text-gray-300" href="https://www.instagram.com/marvin.trvl">Instagram</a>
-      </div>
-      <div class="text-gray-400">&copy; 2023 SnapStock Licensing & Prints</div>
-    </footer>
+    <div class="flex justify-center items-center mb-4">
+      <a class="hover:text-gray-300" href="https://www.instagram.com/marvin.trvl">Contact Us</a>
+      <span class="mx-2 text-gray-400">|</span>
+      <a class="hover:text-gray-300" href="https://www.instagram.com/marvin.trvl">Impressum</a>
+      <span class="mx-2 text-gray-400">|</span>
+      <a class="hover:text-gray-300" href="https://www.instagram.com/marvin.trvl">Instagram</a>
+    </div>
+    <div class="text-gray-400">&copy; 2023 SnapStock Licensing & Prints</div>
+  </footer>
 </template>
 
 <script>
@@ -93,6 +101,9 @@ export default {
       .catch(error => {
         console.error('Error fetching cart items:', error);
       });
+    },
+    isCartEmpty() {
+      return this.cartItems.length === 0;
     },
     emptyCart() {
       axios.delete('http://127.0.0.1:5002/clear-cart', {
@@ -149,4 +160,3 @@ export default {
   },
 };
 </script>
-

@@ -1,69 +1,89 @@
 <template>
   <div class="bg-gray-900 text-white min-h-screen py-6 sm:py-8 lg:py-12">
-  <div class="max-w-md mx-auto mt-8">
-    <h1 class="text-3xl font-bold mb-4">Checkout</h1>
+    <div class="max-w-md mx-auto mt-8">
+      <h1 class="text-3xl font-bold mb-4">Checkout</h1>
 
-    <div class="mb-4">
-      <h2 class="text-2xl font-bold mb-2">Order Details</h2>
-      <table class="border-collapse border border-gray-800 w-full">
-        <thead>
-          <tr class="bg-gray-800 text-white">
-            <th class="py-2 px-4">Photo</th>
-            <th class="py-2 px-4">Size</th>
-            <th class="py-2 px-4">Quantity</th>
-            <th class="py-2 px-4">Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in cartItems" :key="item.id">
-            <td class="py-2 px-4">{{ item.photo.name }}</td>
-            <td class="py-2 px-4">{{ item.photo.size }}</td>
-            <td class="py-2 px-4">{{ item.quantity }}</td>
-            <td class="py-2 px-4">${{ item.photo.price }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <div class="mb-4">
+        <h2 class="text-2xl font-bold mb-2">Order Details</h2>
+        <table class="border-collapse border border-gray-800 w-full">
+          <thead>
+            <tr class="bg-gray-800 text-white">
+              <th class="py-2 px-4">Photo</th>
+              <th class="py-2 px-4">Size</th>
+              <th class="py-2 px-4">Quantity</th>
+              <th class="py-2 px-4">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in cartItems" :key="item.id">
+              <td class="py-2 px-4">{{ item.photo.name }}</td>
+              <td class="py-2 px-4">{{ item.photo.size }}</td>
+              <td class="py-2 px-4">{{ item.quantity }}</td>
+              <td class="py-2 px-4">${{ item.photo.price }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-    <p class="text-xl font-bold mb-2">Total: ${{ cartTotal }}</p>
+      <p class="text-xl font-bold mb-2">Total: ${{ cartTotal }}</p>
 
-    <div class="mb-4">
-      <div class="border border-gray-800 p-4">
-        <h2 class="text-2xl font-bold mb-2">Shipping Information</h2>
-        <!-- Display user's shipping information -->
-        <p><span class="font-bold">Name:</span> {{ user.first_name }} {{ user.last_name }}</p>
-        <p><span class="font-bold">Street:</span> {{ user.street }}</p>
-        <p><span class="font-bold">Postal Code:</span> {{ user.postal_code }}</p>
-        <p><span class="font-bold">City:</span> {{ user.city }}</p>
-        <p><span class="font-bold">Country:</span> {{ user.country }}</p>
+      <div class="mb-4">
+        <div class="border border-gray-800 p-4">
+          <h2 class="text-2xl font-bold mb-2">Shipping Information</h2>
+          <!-- Display user's shipping information -->
+          <div v-if="!editMode">
+            <p><span class="font-bold">First Name:</span> {{ user.first_name }} <span @click="toggleEditMode('first_name')" class="cursor-pointer text-blue-500 ml-2" title="Edit">&#9998;</span></p>
+            <p><span class="font-bold">Last Name:</span> {{ user.last_name }} <span @click="toggleEditMode('last_name')" class="cursor-pointer text-blue-500 ml-2" title="Edit">&#9998;</span></p>
+            <p><span class="font-bold">Street:</span> {{ user.street }} <span @click="toggleEditMode('street')" class="cursor-pointer text-blue-500 ml-2" title="Edit">&#9998;</span></p>
+            <p><span class="font-bold">Postal Code:</span> {{ user.postal_code }} <span @click="toggleEditMode('postal_code')" class="cursor-pointer text-blue-500 ml-2" title="Edit">&#9998;</span></p>
+            <p><span class="font-bold">City:</span> {{ user.city }} <span @click="toggleEditMode('city')" class="cursor-pointer text-blue-500 ml-2" title="Edit">&#9998;</span></p>
+            <p><span class="font-bold">Country:</span> {{ user.country }} <span @click="toggleEditMode('country')" class="cursor-pointer text-blue-500 ml-2" title="Edit">&#9998;</span></p>
+          </div>
+          <div v-else>
+            <!-- Input fields for editing -->
+            <label v-if="editField === 'first_name'">First Name:</label>
+            <input v-if="editField === 'first_name'" v-model="user.first_name" class="rounded-md px-4 py-2 w-full bg-gray-800 text-white" />
+            <label v-if="editField === 'last_name'">Last Name:</label>
+            <input v-if="editField === 'last_name'" v-model="user.last_name" class="rounded-md px-4 py-2 w-full bg-gray-800 text-white" />
+            <label v-if="editField === 'street'">Street:</label>
+            <input v-if="editField === 'street'" v-model="user.street" class="rounded-md px-4 py-2 w-full bg-gray-800 text-white" />
+            <label v-if="editField === 'postal_code'">Postal Code:</label>
+            <input v-if="editField === 'postal_code'" v-model="user.postal_code" class="rounded-md px-4 py-2 w-full bg-gray-800 text-white" />
+            <label v-if="editField === 'city'">City:</label>
+            <input v-if="editField === 'city'" v-model="user.city" class="rounded-md px-4 py-2 w-full bg-gray-800 text-white" />
+            <label v-if="editField === 'country'">Country:</label>
+            <input v-if="editField === 'country'" v-model="user.country" class="rounded-md px-4 py-2 w-full bg-gray-800 text-white" />
+            <button @click="saveChanges" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Save</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <div class="border border-gray-800 p-4">
+          <h2 class="text-2xl font-bold mb-2">Bank Information</h2>
+          <!-- Allow the user to enter bank information -->
+          <form @submit.prevent="placeOrder">
+            <label for="bankInfo" class="block text-white mb-2">Enter Bank Information:</label>
+            <textarea v-model="bankInfo" name="bankInfo" class="rounded-md px-4 py-2 w-full bg-gray-800 text-white resize-none" maxlength="30" rows="1" required></textarea>
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Place Order</button>
+          </form>
+        </div>
       </div>
     </div>
-
-    <div class="mb-4">
-      <div class="border border-gray-800 p-4">
-        <h2 class="text-2xl font-bold mb-2">Bank Information</h2>
-        <!-- Allow the user to enter bank information -->
-        <form @submit.prevent="placeOrder">
-          <label for="bankInfo" class="block text-white mb-2">Enter Bank Information:</label>
-          <textarea v-model="bankInfo" name="bankInfo" class="rounded-md px-4 py-2 w-full bg-gray-800 text-white resize-none" maxlength="30" rows="1" required></textarea>
-          <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Place Order</button>
-        </form>
-      </div>
-    </div>
+    <br>
   </div>
-  <br>
- </div>
- <footer class="py-4 bg-gray-800 flex flex-col justify-center items-center">
-      <div class="flex justify-center items-center mb-4">
-        <a class="hover:text-gray-300" href="https://www.instagram.com/marvin.trvl">Contact Us</a>
-        <span class="mx-2 text-gray-400">|</span>
-        <a class="hover:text-gray-300" href="https://www.instagram.com/marvin.trvl">Impressum</a>
-        <span class="mx-2 text-gray-400">|</span>
-        <a class="hover:text-gray-300" href="https://www.instagram.com/marvin.trvl">Instagram</a>
-      </div>
-      <div class="text-gray-400">&copy; 2023 SnapStock Licensing & Prints</div>
-    </footer>
+  <footer class="py-4 bg-gray-800 flex flex-col justify-center items-center">
+    <div class="flex justify-center items-center mb-4">
+      <a class="hover:text-gray-300" href="https://www.instagram.com/marvin.trvl">Contact Us</a>
+      <span class="mx-2 text-gray-400">|</span>
+      <a class="hover:text-gray-300" href="https://www.instagram.com/marvin.trvl">Impressum</a>
+      <span class="mx-2 text-gray-400">|</span>
+      <a class="hover:text-gray-300" href="https://www.instagram.com/marvin.trvl">Instagram</a>
+    </div>
+    <div class="text-gray-400">&copy; 2023 SnapStock Licensing & Prints</div>
+  </footer>
 </template>
+
 
 <script>
   import axios from 'axios';
@@ -75,6 +95,8 @@
         cartTotal: 0,
         user: {},
         bankInfo: '',
+        editMode: false,
+        editField: '',
       };
     },
     methods: {
@@ -84,24 +106,24 @@
             Authorization: `Bearer ${this.$store.state.authToken}`,
           },
         })
-          .then(response => {
-            // Log raw API response 
-            console.log('API Response:', response.data);
+        .then(response => {
+          // Log raw API response 
+          console.log('API Response:', response.data);
 
-            const cartItems = response.data.cart_items;
-            console.log('First Item:', cartItems[0]);
-            const firstItem = cartItems[0];
-            console.log('First item photo ID:', firstItem.photo_id);
+          const cartItems = response.data.cart_items;
+          console.log('First Item:', cartItems[0]);
+          const firstItem = cartItems[0];
+          console.log('First item photo ID:', firstItem.photo_id);
 
-            // Log cart items separately 
-            console.log('Cart Items:', cartItems);
+          // Log cart items separately 
+          console.log('Cart Items:', cartItems);
 
-            this.cartItems = cartItems;
-            this.cartTotal = response.data.total_price;
-          })
-          .catch(error => {
-            console.error('Error fetching cart items:', error);
-          });
+          this.cartItems = cartItems;
+          this.cartTotal = response.data.total_price;
+        })
+        .catch(error => {
+          console.error('Error fetching cart items:', error);
+        });
       },
       fetchUserInfo() {
         axios.get('http://127.0.0.1:5000/profile', {
@@ -109,12 +131,12 @@
             Authorization: `Bearer ${this.$store.state.authToken}`,
           },
         })
-          .then(response => {
-            this.user = response.data;
-          })
-          .catch(error => {
-            console.error('Error fetching user information:', error);
-          });
+        .then(response => {
+          this.user = response.data;
+        })
+        .catch(error => {
+          console.error('Error fetching user information:', error);
+        });
       },
       placeOrder() {
         const orderDetails = this.cartItems.map(item => {
@@ -146,40 +168,51 @@
             Authorization: `Bearer ${this.$store.state.authToken}`,
           },
         })
-          .then(response => {
-            console.log('Order placed successfully:', response.data);
+        .then(response => {
+          console.log('Order placed successfully:', response.data);
 
-            this.$router.push({
-              name: 'OrderSuccessView',
-              params: { orderId: response.data.order_id }
-            });
-            // Clear the user's cart after placing the order
-            axios.delete('http://127.0.0.1:5002/clear-cart', {
-              headers: {
-                Authorization: `Bearer ${this.$store.state.authToken}`,
-              },
-            })
-              .then(clearResponse => {
-                console.log('Cart cleared successfully:', clearResponse.data);
-                // Optionally, you can navigate to a thank you page or perform other actions
-              })
-              .catch(clearError => {
-                console.error('Error clearing cart:', clearError);
-                // Handle error while clearing the cart
-              });
-          })
-          .catch(error => {
-            console.error('Error placing order:', error);
-            // Handle error, show a message to the user, etc.
+          this.$router.push({
+            name: 'OrderSuccessView',
+            params: { orderId: response.data.order_id }
           });
+          // Clear the user's cart after placing the order
+          axios.delete('http://127.0.0.1:5002/clear-cart', {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.authToken}`,
+            },
+          })
+          .then(clearResponse => {
+            console.log('Cart cleared successfully:', clearResponse.data);
+            // Optionally, you can navigate to a thank you page or perform other actions
+          })
+          .catch(clearError => {
+            console.error('Error clearing cart:', clearError);
+            // Handle error while clearing the cart
+          });
+        })
+        .catch(error => {
+          console.error('Error placing order:', error);
+          // Handle error, show a message to the user, etc.
+        });
+      },
+      toggleEditMode(field) {
+        this.editMode = !this.editMode;
+        if (this.editMode) {
+          this.editField = field;
+        } else {
+          this.editField = '';
+        }
+      },
+      saveChanges() {
+        // Perform any necessary validation or additional logic before saving
+        // For simplicity, assuming the changes are valid and updating the user object directly
+        this.editMode = false;
+        this.editField = '';
       },
     },
-
     created() {
       this.fetchCartItems();
       this.fetchUserInfo();
     },
   };
 </script>
-
-
